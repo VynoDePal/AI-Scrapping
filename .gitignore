@@ -1,0 +1,73 @@
+# Fichiers de configuration contenant des données sensibles
+.env
+.env.*
+!.env.example
+
+# Fichiers Python compilés
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Environnements virtuels
+venv/
+env/
+ENV/
+
+# Fichiers de données
+data/
+*.csv
+*.json
+*.txt
+!requirements.txt
+*.html
+
+# Bases de données vectorielles
+*_vectordb.index
+*_vectordb.meta
+
+# Fichiers IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers de logs
+*.log
+logs/
+log/
+
+# Fichiers temporaires
+*.tmp
+*.temp
+.cache/
+.pytest_cache/
+tmp/
+temp/
+
+# Fichiers de sauvegarde d'éditeurs
+*~
+*.bak
+*.swp
+*.swo
+
+# Fichiers spécifiques au projet
+*_output/
+*_results/
+*_embeddings/
+
+# Notebooks Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Coverage reports
+.coverage
+htmlcov/
+coverage.xml

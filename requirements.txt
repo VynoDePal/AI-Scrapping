@@ -1,0 +1,42 @@
+# Dépendances de base
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+nltk>=3.7
+scikit-learn>=1.1.0
+pandas>=1.4.0
+numpy>=1.22.0
+lxml>=4.9.0
+selenium>=4.2.0
+transformers>=4.20.0
+sentence-transformers>=2.2.2
+faiss-cpu>=1.7.3
+webdriver-manager>=3.8.0
+tqdm>=4.64.0
+python-dotenv>=0.21.0
+
+# Dépendances pour l'extraction PDF
+pymupdf>=1.21.1   # Meilleure solution pour l'extraction PDF (PyMuPDF)
+PyPDF2>=2.12.1    # Solution de repli pour l'extraction PDF
+pdf2image>=1.16.3 # Pour la conversion de PDF en images si nécessaire
+
+# Dépendances pour l'API REST
+fastapi>=0.95.0
+uvicorn>=0.21.0
+python-multipart>=0.0.6
+httpx>=0.24.0
+aiofiles>=23.1.0
+
+# Dépendances pour le traitement de dates
+python-dateutil>=2.8.2
+
+# Dépendances pour l'analyse de sentiment et le NLP
+spacy>=3.5.0
+nltk>=3.7
+
+# Dépendances pour l'export et la conversion de données
+openpyxl>=3.1.0  # Pour l'export Excel
+tabulate>=0.9.0  # Pour l'affichage tabulaire des données
+
+# Dépendances optionnelles mais recommandées
+chardet>=5.1.0   # Pour la détection d'encodage
+colorama>=0.4.6  # Pour les logs colorés en console
