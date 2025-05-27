@@ -173,7 +173,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
 
 #!/usr/bin/env python3
 """
@@ -211,6 +210,7 @@ setup(
         "Source Code": "https://github.com/kevyn-odjo/ai-scrapping",
     },
     packages=find_packages(),
+    license="MIT",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
