@@ -73,12 +73,14 @@ class ExtractionRequest(BaseModel):
     model: str = Field("gpt-3.5-turbo", description="Modèle à utiliser")
     chunk_size: int = Field(4000, description="Taille maximale des chunks")
     max_chunks: Optional[int] = Field(None, description="Nombre maximum de chunks à traiter")
-    chunk_method: Literal["tags", "length", "hybrid"] = Field(
-        "hybrid", description="Méthode de chunking"
+    chunk_method: Literal["tags", "length", "hybrid", "semantic"] = Field(
+        "semantic", description="Méthode de chunking"
     )
     temperature: float = Field(0.0, description="Température pour la génération")
     api_key: Optional[str] = Field(None, description="Clé API pour le provider")
     host: Optional[str] = Field(None, description="URL du serveur API (pour lmstudio et ollama)")
+    source_url: Optional[str] = Field(None, description="URL source pour la détection du type de site")
+    enhanced_mode: bool = Field(True, description="Utiliser le mode d'extraction amélioré")
 
 
 class PDFExtractionRequest(BaseModel):

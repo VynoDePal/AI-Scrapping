@@ -29,21 +29,15 @@ logger = logging.getLogger(__name__)
 async def extract_data(request: ExtractionRequest):
     """
     Extrait des données structurées à partir d'un contenu HTML en utilisant des modèles de langage.
-    
-    - **content**: Contenu HTML à analyser
-    - **query**: Requête d'extraction (ex: "Extraire tous les titres et dates")
-    - **provider**: Provider du modèle de langage
-    - **model**: Nom du modèle à utiliser
-    - **chunk_size**: Taille maximale des chunks
-    - **chunk_method**: Méthode de chunking
     """
     try:
         logger.info(f"Extraction avec {request.provider}/{request.model}: '{request.query}'")
         
-        # Découper le contenu en chunks
+        # Découper le contenu en chunks (utiliser semantic par défaut pour de meilleurs résultats)
+        chunk_method = request.chunk_method if request.chunk_method != "hybrid" else "semantic"
         chunks = html_to_chunks(
             request.content, 
-            method=request.chunk_method,
+            method=chunk_method,
             max_length=request.chunk_size
         )
         
@@ -66,16 +60,22 @@ async def extract_data(request: ExtractionRequest):
         
         llm_provider = get_llm_provider(request.provider, **llm_config)
         
-        # Extraire les données des chunks
+        # Extraire les données avec le mode amélioré par défaut
         extraction_results = extract_data_from_chunks(
             chunks=chunks,
             query=request.query,
             llm_provider=llm_provider,
-            max_workers=min(4, len(chunks))
+            max_workers=min(4, len(chunks)),
+            enhanced_mode=True,  # Activer le mode amélioré
+            url=getattr(request, 'source_url', '')  # URL source si disponible
         )
         
-        # Agréger les résultats
-        aggregated_data = aggregate_extraction_results(extraction_results)
+        # Le mode amélioré retourne déjà un résultat agrégé
+        if extraction_results and isinstance(extraction_results[0], dict):
+            aggregated_data = extraction_results[0]
+        else:
+            # Fallback vers l'agrégation classique
+            aggregated_data = aggregate_extraction_results(extraction_results)
         
         return ExtractionResponse(
             query=request.query,
