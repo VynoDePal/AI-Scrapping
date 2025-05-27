@@ -201,7 +201,7 @@ def main():
     # Options pour le chunking
     parser.add_argument("--chunk", action="store_true",
                         help="Diviser le contenu en segments (chunks)")
-    parser.add_argument("--chunk-method", choices=["tags", "length", "hybrid"],
+    parser.add_argument("--chunk-method", choices=["tags", "length", "hybrid", "semantic"],
                         default="hybrid", help="Méthode de découpage en chunks")
     parser.add_argument("--chunk-size", type=int, default=1000,
                         help="Taille maximale d'un chunk en caractères")
