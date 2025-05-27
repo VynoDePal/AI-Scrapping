@@ -31,11 +31,13 @@ class ScrapingRequest(BaseModel):
 class ChunkingRequest(BaseModel):
     """Modèle pour les requêtes de chunking."""
     content: str = Field(..., description="Contenu HTML à découper en chunks")
-    chunk_method: Literal["tags", "length", "hybrid"] = Field(
+    chunk_method: Literal["tags", "length", "hybrid", "semantic"] = Field(
         "hybrid", description="Méthode de découpage"
     )
     max_length: int = Field(1000, description="Taille maximale d'un chunk")
+    min_length: int = Field(200, description="Taille minimale d'un chunk (pour sémantique)")
     overlap: int = Field(100, description="Chevauchement entre les chunks")
+    prioritize_important: bool = Field(True, description="Prioriser les sections importantes (pour sémantique)")
 
 
 class VectorizationRequest(BaseModel):
