@@ -2,7 +2,9 @@ include README.md
 include LICENSE
 include requirements.txt
 include .env.example
-recursive-include docs *
+recursive-include ai_scrapping_toolkit *.py
+recursive-include ai_scrapping_toolkit/api/templates *.html
+recursive-include ai_scrapping_toolkit/api/static *.css *.js *.png
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 recursive-exclude tests *
