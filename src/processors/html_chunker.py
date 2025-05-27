@@ -7,6 +7,8 @@ pour les modèles de langage avec contraintes de tokens.
 import re
 import logging
 from bs4 import BeautifulSoup, Tag
+from typing import List
+from .semantic_chunker import semantic_html_to_chunks
 
 # Configuration du logger
 logger = logging.getLogger(__name__)
@@ -167,13 +169,35 @@ def chunk_by_length(text, max_length=1000, overlap=100):
     
     return chunks
 
-def html_to_chunks(html_content, method='tags', max_length=1000, overlap=100):
+def html_to_chunks(
+    html_content: str, 
+    method: str = "hybrid", 
+    max_length: int = 1000, 
+    overlap: int = 100
+) -> List[str]:
     """
-    Convertit le HTML en une liste de chunks de texte.
+    Convertit le contenu HTML en chunks selon la méthode spécifiée.
+    
+    Args:
+        html_content: Contenu HTML brut
+        method: Méthode de chunking ('tags', 'length', 'hybrid', 'semantic')
+        max_length: Taille maximale d'un chunk
+        overlap: Chevauchement entre chunks adjacents
+        
+    Returns:
+        List[str]: Liste des chunks générés
     """
     if not html_content:
-        logger.warning("Contenu HTML vide fourni pour le chunking")
         return []
+    
+    # Nouvelle méthode sémantique
+    if method == "semantic":
+        return semantic_html_to_chunks(
+            html_content, 
+            max_length=max_length, 
+            overlap=overlap,
+            prioritize_important=True
+        )
     
     try:
         soup = BeautifulSoup(html_content, 'html.parser')
