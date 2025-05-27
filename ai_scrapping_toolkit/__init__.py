@@ -16,7 +16,7 @@ from .src.processors import (
     semantic_html_to_chunks
 )
 from .src.embeddings import chunks_to_embeddings, create_faiss_index
-from .src.llm import get_llm_provider, extract_data_from_chunks, aggregate_extraction_results
+from .src.llm import get_llm_provider, extract_data_from_chunks, aggregate_extraction_results, enhanced_extract_data_from_chunks
 
 # Configurer le logger
 import logging
@@ -50,5 +50,6 @@ __all__ = [
     'create_faiss_index',
     'get_llm_provider',
     'extract_data_from_chunks',
-    'aggregate_extraction_results'
+    'aggregate_extraction_results',
+    'enhanced_extract_data_from_chunks'
 ]
