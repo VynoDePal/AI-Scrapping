@@ -7,7 +7,14 @@ __author__ = "Kevyn Odjo"
 
 # Import des modules principaux pour faciliter l'accès
 from .src.scrapers import fetch_content
-from .src.processors import preprocess_html, extract_main_content, html_to_chunks, pdf_to_chunks
+from .src.processors import (
+    preprocess_html, 
+    extract_main_content, 
+    get_page_title,
+    html_to_chunks, 
+    pdf_to_chunks,
+    semantic_html_to_chunks
+)
 from .src.embeddings import chunks_to_embeddings, create_faiss_index
 from .src.llm import get_llm_provider, extract_data_from_chunks, aggregate_extraction_results
 
@@ -30,3 +37,18 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
+
+__all__ = [
+    'fetch_content',
+    'preprocess_html',
+    'extract_main_content',
+    'get_page_title',
+    'html_to_chunks',
+    'pdf_to_chunks',
+    'semantic_html_to_chunks',
+    'chunks_to_embeddings',
+    'create_faiss_index',
+    'get_llm_provider',
+    'extract_data_from_chunks',
+    'aggregate_extraction_results'
+]
