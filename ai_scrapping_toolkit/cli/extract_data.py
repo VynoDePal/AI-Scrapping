@@ -78,7 +78,23 @@ def main():
         action="store_true",
         help="Afficher plus de détails"
     )
-    
+    parser.add_argument(
+        "--enhanced-mode",
+        action="store_true",
+        default=True,
+        help="Utiliser le mode d'extraction amélioré avec deux passes"
+    )
+    parser.add_argument(
+        "--website-type",
+        choices=["auto", "review", "ecommerce", "news", "blog", "technical"],
+        default="auto",
+        help="Type de site web pour optimiser l'extraction"
+    )
+    parser.add_argument(
+        "--source-url",
+        help="URL source pour la détection automatique du type de site"
+    )
+
     args = parser.parse_args()
     
     # Joindre tous les arguments de la requête en une seule chaîne
@@ -136,15 +152,26 @@ def main():
     # Extraire les données
     logger.info("Démarrage de l'extraction de données...")
     try:
-        extraction_results = extract_data_from_chunks(
-            chunks=chunks,
-            query=query,
-            llm_provider=llm_provider,
-            max_workers=min(4, len(chunks))
-        )
-        
-        # Agréger les résultats
-        aggregated_data = aggregate_extraction_results(extraction_results)
+        if args.enhanced_mode:
+            from ai_scrapping_toolkit.src.llm import enhanced_extract_data_from_chunks
+            
+            result = enhanced_extract_data_from_chunks(
+                chunks=chunks,
+                query=query,
+                llm_provider=llm_provider,
+                url=args.source_url or "",
+                max_workers=min(4, len(chunks))
+            )
+            aggregated_data = result
+        else:
+            extraction_results = extract_data_from_chunks(
+                chunks=chunks,
+                query=query,
+                llm_provider=llm_provider,
+                max_workers=min(4, len(chunks)),
+                enhanced_mode=False
+            )
+            aggregated_data = aggregate_extraction_results(extraction_results)
         
         # Afficher ou sauvegarder les résultats
         if args.output:
@@ -160,6 +187,7 @@ def main():
             print(f"- Provider: {args.provider}")
             print(f"- Modèle: {args.model}")
             print(f"- Méthode de chunking: {args.chunk_method}")
+            print(f"- Mode amélioré: {'Oui' if args.enhanced_mode else 'Non'}")
     
     except Exception as e:
         print(f"Erreur lors de l'extraction: {e}")

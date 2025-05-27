@@ -202,10 +202,10 @@ def main():
     parser.add_argument("--chunk", action="store_true",
                         help="Diviser le contenu en segments (chunks)")
     parser.add_argument("--chunk-method", choices=["tags", "length", "hybrid", "semantic"],
-                        default="hybrid", help="Méthode de découpage en chunks")
-    parser.add_argument("--chunk-size", type=int, default=1000,
+                        default="semantic", help="Méthode de découpage en chunks (recommandé: semantic)")
+    parser.add_argument("--chunk-size", type=int, default=4000,
                         help="Taille maximale d'un chunk en caractères")
-    parser.add_argument("--chunk-overlap", type=int, default=100,
+    parser.add_argument("--chunk-overlap", type=int, default=200,
                         help="Chevauchement entre chunks en caractères")
     
     # Nouvelles options pour la vectorisation
@@ -216,16 +216,20 @@ def main():
     parser.add_argument("--index-type", choices=["L2", "IP", "IVF"], default="L2",
                         help="Type d'index FAISS à créer")
     
-    # Options éthiques et légales
+    # Options éthiques et légales améliorées
     legal_group = parser.add_argument_group('Options Légales & Éthiques')
     legal_group.add_argument("--ignore-robots", action="store_true",
                         help="Ignorer les règles robots.txt (non recommandé)")
     legal_group.add_argument("--user-agent", 
                         default="AI-Scrapping-Toolkit/1.0 (+https://github.com/kevyn-odjo/ai-scrapping)",
                         help="User-Agent à utiliser pour les requêtes")
-    legal_group.add_argument("--rate-limit", type=float, default=1.0,
-                        help="Délai minimum entre les requêtes en secondes")
-    
+    legal_group.add_argument("--rate-limit", type=float, default=2.0,
+                        help="Délai minimum entre les requêtes en secondes (recommandé: 2.0+)")
+    legal_group.add_argument("--random-delay", action="store_true",
+                        help="Ajouter un délai aléatoire pour simuler un comportement humain")
+    legal_group.add_argument("--retry-attempts", type=int, default=3,
+                        help="Nombre de tentatives en cas d'échec")
+
     # Options de débogage
     parser.add_argument("--debug", action="store_true", 
                         help="Activer le mode débogage pour afficher plus d'informations")
