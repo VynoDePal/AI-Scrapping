@@ -34,54 +34,63 @@ async def extract_data(request: ExtractionRequest):
         logger.info(f"Extraction avec {request.provider}/{request.model}: '{request.query}'")
         
         # Découper le contenu en chunks (utiliser semantic par défaut pour de meilleurs résultats)
-        chunk_method = request.chunk_method if request.chunk_method != "hybrid" else "semantic"
+        chunk_method = getattr(request, 'chunk_method', 'hybrid')
+        if chunk_method == "hybrid":
+            chunk_method = "semantic"  # Utiliser semantic par défaut
+        
         chunks = html_to_chunks(
             request.content, 
             method=chunk_method,
-            max_length=request.chunk_size
+            max_length=getattr(request, 'chunk_size', 4000)
         )
         
         if not chunks:
             raise HTTPException(status_code=400, detail="Échec du chunking: aucun chunk généré")
         
         # Limiter le nombre de chunks si spécifié
-        if request.max_chunks and request.max_chunks > 0 and len(chunks) > request.max_chunks:
-            chunks = chunks[:request.max_chunks]
+        max_chunks = getattr(request, 'max_chunks', None)
+        if max_chunks and max_chunks > 0 and len(chunks) > max_chunks:
+            chunks = chunks[:max_chunks]
         
         # Initialiser le provider LLM
         llm_config = {
-            "api_key": request.api_key,
-            "model": request.model,
-            "temperature": request.temperature
+            "api_key": getattr(request, 'api_key', None),
+            "model": getattr(request, 'model', 'gpt-3.5-turbo'),
+            "temperature": getattr(request, 'temperature', 0.0)
         }
         
-        if request.host:
-            llm_config["host"] = request.host
+        host = getattr(request, 'host', None)
+        if host:
+            llm_config["host"] = host
         
         llm_provider = get_llm_provider(request.provider, **llm_config)
         
-        # Extraire les données avec le mode amélioré par défaut
+        # Extraire les données avec le mode approprié
+        enhanced_mode = getattr(request, 'enhanced_mode', True)
+        source_url = getattr(request, 'source_url', '')
+        
         extraction_results = extract_data_from_chunks(
             chunks=chunks,
             query=request.query,
             llm_provider=llm_provider,
             max_workers=min(4, len(chunks)),
-            enhanced_mode=True,  # Activer le mode amélioré
-            url=getattr(request, 'source_url', '')  # URL source si disponible
+            enhanced_mode=enhanced_mode,
+            url=source_url
         )
         
-        # Le mode amélioré retourne déjà un résultat agrégé
-        if extraction_results and isinstance(extraction_results[0], dict):
+        # Agréger les résultats
+        if extraction_results and len(extraction_results) == 1 and enhanced_mode:
+            # Le mode amélioré retourne déjà un résultat agrégé
             aggregated_data = extraction_results[0]
         else:
-            # Fallback vers l'agrégation classique
+            # Agrégation classique
             aggregated_data = aggregate_extraction_results(extraction_results)
         
         return ExtractionResponse(
             query=request.query,
             data=aggregated_data,
             provider=request.provider,
-            model=request.model,
+            model=getattr(request, 'model', 'gpt-3.5-turbo'),
             chunk_count=len(chunks),
             timestamp=datetime.datetime.now().isoformat()
         )

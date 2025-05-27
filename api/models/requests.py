@@ -80,7 +80,7 @@ class ExtractionRequest(BaseModel):
     api_key: Optional[str] = Field(None, description="Clé API pour le provider")
     host: Optional[str] = Field(None, description="URL du serveur API (pour lmstudio et ollama)")
     source_url: Optional[str] = Field(None, description="URL source pour la détection du type de site")
-    enhanced_mode: bool = Field(True, description="Utiliser le mode d'extraction amélioré")
+    enhanced_mode: bool = Field(False, description="Utiliser le mode d'extraction amélioré (si disponible)")
 
 
 class PDFExtractionRequest(BaseModel):
