@@ -23,7 +23,7 @@ Assurez-vous que votre version est correctement définie dans `setup.py`. Incré
 rm -rf build/ dist/ *.egg-info/
 
 # Construire le package
-python -m build
+python setup.py sdist bdist_wheel
 ```
 
 Cette commande génère des fichiers dans le dossier `dist/`:

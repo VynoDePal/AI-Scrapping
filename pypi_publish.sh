@@ -14,7 +14,7 @@ rm -rf build/ dist/ *.egg-info/
 
 # Construction du package (source et wheel)
 echo "Construction du package..."
-python -m build
+python setup.py sdist bdist_wheel
 
 # Vérification du package avec twine
 echo "Vérification du package..."
