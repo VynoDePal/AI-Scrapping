@@ -1,32 +1,34 @@
 """
-Module source principal du AI Scrapping Toolkit.
+Module d'initialisation du projet AI Scrapping.
 """
 
-# Import des modules principaux
-from .scrapers import fetch_content
-from .processors import (
-    preprocess_html, 
-    extract_main_content, 
-    get_page_title, 
-    html_to_chunks, 
-    pdf_to_chunks,
-    semantic_html_to_chunks
-)
-from .embeddings import chunks_to_embeddings, create_faiss_index, save_faiss_index
-from .llm import get_llm_provider, extract_data_from_chunks, aggregate_extraction_results
+import os
+from pathlib import Path
 
-__all__ = [
-    'fetch_content',
-    'preprocess_html',
-    'extract_main_content', 
-    'get_page_title',
-    'html_to_chunks',
-    'pdf_to_chunks',
-    'semantic_html_to_chunks',
-    'chunks_to_embeddings',
-    'create_faiss_index',
-    'save_faiss_index',
-    'get_llm_provider',
-    'extract_data_from_chunks',
-    'aggregate_extraction_results'
-]
+# Chargement des variables d'environnement depuis .env
+try:
+    from dotenv import load_dotenv
+    # Chemin vers le fichier .env à la racine du projet
+    env_path = Path(__file__).parent.parent / '.env'
+    load_dotenv(dotenv_path=env_path)
+    
+    # Vérifier si les clés API principales sont disponibles
+    api_keys = {
+        'OPENAI_API_KEY': os.environ.get('OPENAI_API_KEY'),
+        'OPENROUTER_API_KEY': os.environ.get('OPENROUTER_API_KEY'),
+        'HUGGINGFACE_API_KEY': os.environ.get('HUGGINGFACE_API_KEY')
+    }
+    
+    loaded_keys = [key for key, value in api_keys.items() if value]
+    if loaded_keys:
+        print(f"Variables d'environnement chargées: {', '.join(loaded_keys)}")
+    else:
+        print("Aucune clé API trouvée dans le fichier .env")
+    
+except ImportError:
+    print("Le package python-dotenv n'est pas installé. Les variables d'environnement .env ne seront pas chargées.")
+    print("Pour l'installer: pip install python-dotenv")
+except Exception as e:
+    print(f"Erreur lors du chargement des variables d'environnement: {e}")
+
+__version__ = "1.0.0"
